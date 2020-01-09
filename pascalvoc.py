@@ -23,7 +23,7 @@ from BoundingBoxes import BoundingBoxes
 from Evaluator import *
 from utils import BBFormat
 
-
+# TPやF measureなどの値を記述するように変えた。20200108
 # Validate formats
 def ValidateFormats(argFormat, argName, errors):
     if argFormat == 'xywh':
@@ -353,13 +353,30 @@ for metricsPerClass in detections:
         prec = ['%.2f' % p for p in precision]
         rec = ['%.2f' % r for r in recall]
         ap_str = "{0:.2f}%".format(ap * 100)
+        total_FN = totalPositives - total_TP
+        total_precision = total_TP/(total_TP+total_FP)
+        total_recall = total_TP/(total_TP+total_FN)
+        total_F_measure = 2.*total_recall*total_precision/(total_recall+total_precision)
         # ap_str = "{0:.4f}%".format(ap * 100)
         print('AP: %s (%s)' % (ap_str, cl))
+        print("TP",total_TP)
+        print("FP",total_FP)
+        print("FN",total_FN)
+        print("precision",total_precision)
+        print("recall",total_recall)
+        print("F-measure",total_F_measure)
+        # print("list",metricsPerClass)
         f.write('\n\nClass: %s' % cl)
         f.write('\nAP: %s' % ap_str)
         f.write('\nPrecision: %s' % prec)
         f.write('\nRecall: %s' % rec)
-
+        f.write("TP: "+str(total_TP)+"\n")
+        f.write("FP: "+str(total_FP)+"\n")
+        f.write("FN: "+str(total_FN)+"\n")
+        f.write("precision: "+str(total_precision)+"\n")
+        f.write("recall: "+str(total_recall)+"\n")
+        f.write("F-measure: "+str(total_F_measure)+"\n")
+        
 mAP = acc_AP / validClasses
 mAP_str = "{0:.2f}%".format(mAP * 100)
 print('mAP: %s' % mAP_str)

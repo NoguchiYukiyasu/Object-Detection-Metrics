@@ -1,0 +1,1 @@
+python pascalvoc.py -det test/result_folder -gt test/ground_truth
